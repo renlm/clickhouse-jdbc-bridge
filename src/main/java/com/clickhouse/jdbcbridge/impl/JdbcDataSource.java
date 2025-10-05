@@ -15,6 +15,8 @@
  */
 package com.clickhouse.jdbcbridge.impl;
 
+import static com.clickhouse.jdbcbridge.core.Utils.EMPTY_STRING;
+
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -251,11 +253,13 @@ public class JdbcDataSource extends NamedDataSource {
                         buffer.writeDecimal256(rs.getBigDecimal(column), metadata.getScale());
                         break;
                     case FixedStr:
-                        buffer.writeFixedString(rs.getString(column), metadata.getLength());
+                        String fixedStr = rs.getString(column);
+                        buffer.writeFixedString(fixedStr == null ? EMPTY_STRING : fixedStr, metadata.getLength());
                         break;
                     case Str:
                     default:
-                        buffer.writeString(rs.getString(column), params.nullAsDefault());
+                        String str = rs.getString(column);
+                        buffer.writeString(str == null ? EMPTY_STRING : str, params.nullAsDefault());
                         break;
                 }
             } catch (SQLException e) {
