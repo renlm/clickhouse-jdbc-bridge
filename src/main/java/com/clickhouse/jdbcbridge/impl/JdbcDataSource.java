@@ -19,6 +19,7 @@ import static com.clickhouse.jdbcbridge.core.Utils.EMPTY_STRING;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.JDBCType;
@@ -27,6 +28,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -229,28 +231,36 @@ public class JdbcDataSource extends NamedDataSource {
                         buffer.writeFloat64(rs.getDouble(column));
                         break;
                     case Date:
-                        buffer.writeDate(rs.getDate(column));
+                    	Date date = rs.getDate(column);
+                        buffer.writeDate(date == null ? new Date(0) : date);
                         break;
                     case DateTime:
-                        buffer.writeDateTime(rs.getTimestamp(column), metadata.getTimeZone());
+                    	Timestamp dateTime = rs.getTimestamp(column);
+                        buffer.writeDateTime(dateTime == null ? new Timestamp(0) : dateTime, metadata.getTimeZone());
                         break;
                     case DateTime64:
-                        buffer.writeDateTime64(rs.getTimestamp(column), metadata.getScale(), metadata.getTimeZone());
+                    	Timestamp dateTime64 = rs.getTimestamp(column);
+                        buffer.writeDateTime64(dateTime64 == null ? new Timestamp(0) : dateTime64, metadata.getScale(), metadata.getTimeZone());
                         break;
                     case Decimal:
-                        buffer.writeDecimal(rs.getBigDecimal(column), metadata.getPrecision(), metadata.getScale());
+                    	BigDecimal decimalValue = rs.getBigDecimal(column);
+                        buffer.writeDecimal(decimalValue == null ? new BigDecimal(0) : decimalValue, metadata.getPrecision(), metadata.getScale());
                         break;
                     case Decimal32:
-                        buffer.writeDecimal32(rs.getBigDecimal(column), metadata.getScale());
+                    	BigDecimal decimal32Value = rs.getBigDecimal(column);
+                        buffer.writeDecimal32(decimal32Value == null ? new BigDecimal(0) : decimal32Value, metadata.getScale());
                         break;
                     case Decimal64:
-                        buffer.writeDecimal64(rs.getBigDecimal(column), metadata.getScale());
+                    	BigDecimal decimal64Value = rs.getBigDecimal(column);
+                        buffer.writeDecimal64(decimal64Value == null ? new BigDecimal(0) : decimal64Value, metadata.getScale());
                         break;
                     case Decimal128:
-                        buffer.writeDecimal128(rs.getBigDecimal(column), metadata.getScale());
+                    	BigDecimal decimal128Value = rs.getBigDecimal(column);
+                        buffer.writeDecimal128(decimal128Value == null ? new BigDecimal(0) : decimal128Value, metadata.getScale());
                         break;
                     case Decimal256:
-                        buffer.writeDecimal256(rs.getBigDecimal(column), metadata.getScale());
+                    	BigDecimal decimal256Value = rs.getBigDecimal(column);
+                        buffer.writeDecimal256(decimal256Value == null ? new BigDecimal(0) : decimal256Value, metadata.getScale());
                         break;
                     case FixedStr:
                         String fixedStr = rs.getString(column);
